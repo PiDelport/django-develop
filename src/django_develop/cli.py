@@ -103,11 +103,10 @@ def main():
     utility = ManagementUtility()
     utility.autocomplete()
 
-    if 'VIRTUAL_ENV' not in os.environ:
-        print('VIRTUAL_ENV not set, aborting')
+    if not utils.is_inside_virtual_env():
         print('Run django-develop inside a virtualenv')
         raise SystemExit()
-    virtualenv_path = Path(os.environ['VIRTUAL_ENV'])
+    virtualenv_path = Path(sys.prefix)
 
     dd = DjangoDevelop(virtualenv_path / 'django-develop-instance')
 
