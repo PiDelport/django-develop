@@ -4,6 +4,23 @@ import sys
 import pkgutil
 
 
+def is_inside_virtual_env():
+    """
+    Detect whether a Python virtual environment is active.
+
+    This detects environments created using virtualenv, or using Python's built-in venv (PEP 405).
+    If true, `sys.prefix` should be the virtual environment's root.
+
+    This implementation only looks at the `sys` module,
+    so environment variables like VIRTUAL_ENV do not affect it.
+
+    :rtype: bool
+    """
+    is_virtualenv = hasattr(sys, 'real_prefix')
+    is_venv = hasattr(sys, 'base_prefix') and sys.prefix != sys.base_prefix
+    return is_virtualenv or is_venv
+
+
 _ignored_settings_modules = {
     'django.conf.global_settings',
     'django.core.management.commands.diffsettings',
