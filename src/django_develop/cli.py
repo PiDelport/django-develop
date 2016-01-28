@@ -10,7 +10,7 @@ from django.conf import settings, ENVIRONMENT_VARIABLE
 from django.core.management import ManagementUtility
 
 from django_develop.compat import RawConfigParser
-from django_develop.utils import print_candidate_settings
+from django_develop import utils
 
 
 @attributes
@@ -118,7 +118,7 @@ def main():
         except ValueError:
             print('Usage: django-develop init <base_settings_module>')
             print()
-            print_candidate_settings()
+            utils.print_candidate_settings()
             raise SystemExit()
         else:
             dd.init_instance(base_settings_module)
