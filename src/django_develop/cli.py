@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 
 import importlib
 import os
@@ -95,6 +95,15 @@ class DjangoDevelop(object):
         os.environ[ENVIRONMENT_VARIABLE] = 'django_develop.dev_settings'
 
 
+def _fail(*lines):
+    """
+    :raises: SystemExit
+    """
+    for line in lines:
+        print(line, file=sys.stderr)
+    raise SystemExit(2)
+
+
 def main():
     """
     django-develop CLI entry point.
@@ -104,8 +113,7 @@ def main():
     utility.autocomplete()
 
     if not utils.is_inside_virtual_env():
-        print('Run django-develop inside a virtualenv')
-        raise SystemExit()
+        _fail('Run django-develop inside a virtualenv')
     virtualenv_path = Path(sys.prefix)
 
     dd = DjangoDevelop(virtualenv_path / 'django-develop-instance')
@@ -122,7 +130,7 @@ def main():
         else:
             dd.init_instance(base_settings_module)
     elif not dd.instance_path.exists():
-        print('django-develop not configured, try "django-develop init"')
+        _fail('django-develop not configured, try "django-develop init"')
     else:
         # Set up and hand over to Django
         dd.activate_dev_settings()
