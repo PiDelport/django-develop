@@ -52,11 +52,16 @@ def find_candidate_settings():
 
 
 def print_candidate_settings():
-    print('Possible settings modules found:')
-    print()
-    for (path_entry, candidates) in find_candidate_settings():
-        print('    From {}:'.format(path_entry))
+    print('Discovering usable Django settings modules...', end=' ', flush=True)
+    candidate_groups = list(find_candidate_settings())
+    if 0 < len(candidate_groups):
+        print('Found:')
         print()
-        for candidate in candidates:
-            print('        {}'.format(candidate))
-        print()
+        for (path_entry, candidates) in candidate_groups:
+            print('    In {}:'.format(path_entry))
+            print()
+            for candidate in candidates:
+                print('        {}'.format(candidate))
+            print()
+    else:
+        print('None found.')
