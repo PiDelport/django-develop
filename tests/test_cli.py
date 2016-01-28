@@ -30,4 +30,4 @@ class TestMain(unittest.TestCase):
                 cli.main()
         self.assertEqual(raised.exception.code, 2)
         self.assertEqual(stderr.getvalue().splitlines(),
-                         ['django-develop not configured, try "django-develop init"'])
+                         ['django-develop not configured, try "django-develop-config"'])

@@ -30,6 +30,7 @@ setup(
     entry_points={
         'console_scripts': [
             'django-develop = django_develop.cli:main',
+            'django-develop-config = django_develop.cli:main_config',
         ],
     },
 

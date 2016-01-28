@@ -104,6 +104,11 @@ def _fail(*lines):
     raise SystemExit(2)
 
 
+def _get_DjangoDevelop():
+    virtualenv_path = Path(sys.prefix)
+    return DjangoDevelop(virtualenv_path / 'django-develop-instance')
+
+
 def main():
     """
     django-develop CLI entry point.
@@ -114,25 +119,32 @@ def main():
 
     if not utils.is_inside_virtual_env():
         _fail('Run django-develop inside a virtualenv')
-    virtualenv_path = Path(sys.prefix)
 
-    dd = DjangoDevelop(virtualenv_path / 'django-develop-instance')
+    dd = _get_DjangoDevelop()
 
-    if sys.argv[1:2] == ['init']:
-        # XXX: Special-cased, for now
-        try:
-            [base_settings_module] = sys.argv[2:3]
-        except ValueError:
-            print('Usage: django-develop init <base_settings_module>')
-            print()
-            utils.print_candidate_settings()
-            raise SystemExit()
-        else:
-            dd.init_instance(base_settings_module)
-    elif not dd.instance_path.exists():
-        _fail('django-develop not configured, try "django-develop init"')
+    if not dd.instance_path.exists():
+        _fail('django-develop not configured, try "django-develop-config"')
     else:
         # Set up and hand over to Django
         dd.activate_dev_settings()
 
         utility.execute()
+
+
+def main_config():
+    """
+    django-develop-config CLI entry point.
+    """
+    if not utils.is_inside_virtual_env():
+        _fail('Run django-develop-config inside a virtualenv')
+
+    try:
+        [base_settings_module] = sys.argv[1:2]
+    except ValueError:
+        print('Usage: django-develop-config <base_settings_module>')
+        print()
+        utils.print_candidate_settings()
+        raise SystemExit(2)
+    else:
+        dd = _get_DjangoDevelop()
+        dd.init_instance(base_settings_module)
