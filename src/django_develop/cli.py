@@ -58,7 +58,16 @@ class DjangoDevelop(object):
         # Import the base settings module
         config = self.read_config()
         base_settings_module = config.get('django-develop', 'base_settings_module')
-        base_mod = importlib.import_module(base_settings_module)
+        try:
+            base_mod = importlib.import_module(base_settings_module)
+        except ImportError:
+            print('Failed to import Django settings module {!r}. Try django-develop-config?'
+                  .format(base_settings_module),
+                  file=sys.stderr)
+            print('', file=sys.stderr)
+            # Re-raise the error so that the user can see and diagnose the traceback.
+            raise
+
         for name in dir(base_mod):
             if name.isupper():
                 value = getattr(base_mod, name)
