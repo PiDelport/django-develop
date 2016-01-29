@@ -43,7 +43,7 @@ def find_candidate_settings():
     for sys_path_entry in list(sys.path):
         modnames = [
             modname
-            for (loader, modname, is_pkg) in pkgutil.walk_packages([sys_path_entry],
+            for (finder, modname, is_pkg) in pkgutil.walk_packages([sys_path_entry],
                                                                    onerror=report_candidate)
             if not is_pkg and is_candidate_settings(modname)
             ]
