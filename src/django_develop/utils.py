@@ -28,27 +28,27 @@ _ignored_settings_modules = {
 }
 
 
-def is_candidate_settings(name):
+def is_candidate_settings(modname):
     # TODO: Smarter heuristic: Check for known Django setting name definitions.
-    return 'settings' in name and name not in _ignored_settings_modules
+    return 'settings' in modname and modname not in _ignored_settings_modules
 
 
 def find_candidate_settings():
 
-    def report_candidate(name):
-        if is_candidate_settings(name):
-            print('Warning: import failed for {}'.format(name))
+    def report_candidate(modname):
+        if is_candidate_settings(modname):
+            print('Warning: import failed for {}'.format(modname))
 
     # XXX: Copy sys.path with list(), to avoid weird effects from mutation while we iterate.
     for sys_path_entry in list(sys.path):
-        candidates = [
-            name
-            for (loader, name, is_pkg) in pkgutil.walk_packages([sys_path_entry],
-                                                                onerror=report_candidate)
-            if not is_pkg and is_candidate_settings(name)
+        modnames = [
+            modname
+            for (loader, modname, is_pkg) in pkgutil.walk_packages([sys_path_entry],
+                                                                   onerror=report_candidate)
+            if not is_pkg and is_candidate_settings(modname)
             ]
-        if 0 < len(candidates):
-            yield (sys_path_entry, candidates)
+        if 0 < len(modnames):
+            yield (sys_path_entry, modnames)
 
 
 def print_candidate_settings():
@@ -60,11 +60,11 @@ def print_candidate_settings():
     if 0 < len(candidate_groups):
         print('Found:')
         print()
-        for (sys_path_entry, candidates) in candidate_groups:
+        for (sys_path_entry, modnames) in candidate_groups:
             print('    In {}:'.format(sys_path_entry))
             print()
-            for candidate in candidates:
-                print('        {}'.format(candidate))
+            for modname in modnames:
+                print('        {}'.format(modname))
             print()
     else:
         print('None found.')
