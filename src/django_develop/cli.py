@@ -91,6 +91,26 @@ class DjangoDevelop(object):
             if hasattr(dev_settings, name) and not getattr(dev_settings, name):
                 delattr(dev_settings, name)
 
+        # Similar to the above, if all the email settings are explicitly set
+        # and equal to Django's global default values, then clear them.
+        #
+        email_defaults_in_global_settings = {
+            'EMAIL_BACKEND': 'django.core.mail.backends.smtp.EmailBackend',
+            'EMAIL_HOST': 'localhost',
+            'EMAIL_PORT': 25,
+            'EMAIL_HOST_USER': '',
+            'EMAIL_HOST_PASSWORD': '',
+            'EMAIL_USE_TLS': False,
+            'EMAIL_USE_SSL': False,
+            'EMAIL_SSL_CERTFILE': None,
+            'EMAIL_SSL_KEYFILE': None,
+            'EMAIL_TIMEOUT': None,
+        }
+        if all(hasattr(dev_settings, name) and getattr(dev_settings, name) == value
+               for (name, value) in email_defaults_in_global_settings.items()):
+            for name in email_defaults_in_global_settings.keys():
+                delattr(dev_settings, name)
+
         # Add django-development defaults
         defaults = {
             # The usual required settings
