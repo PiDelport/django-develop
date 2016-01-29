@@ -103,14 +103,19 @@ def print_candidate_settings(include_problems=False):
         print('Found:')
         print()
         for (sys_path_entry, modnames) in candidate_groups:
-            print('    In {}:'.format(sys_path_entry))
-            print()
-            for modname in modnames:
-                problems = find_potential_problems(modname)
-                if not problems:
-                    print('        {}'.format(modname))
-                elif include_problems:
-                    print('        {} ({})'.format(modname, ', '.join(problems)))
-            print()
+            # XXX: A bit messy.
+            if not include_problems:
+                modnames = [n for n in modnames if not find_potential_problems(n)]
+
+            if 0 < len(modnames):
+                print('    In {}:'.format(sys_path_entry))
+                print()
+                for modname in modnames:
+                    problems = find_potential_problems(modname)
+                    if not problems:
+                        print('        {}'.format(modname))
+                    elif include_problems:
+                        print('        {} ({})'.format(modname, ', '.join(problems)))
+                print()
     else:
         print('None found.')
