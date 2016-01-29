@@ -2,6 +2,7 @@ from __future__ import print_function
 
 import sys
 import pkgutil
+import importlib
 
 
 def is_inside_virtual_env():
@@ -29,7 +30,6 @@ _ignored_settings_modules = {
 
 
 def is_candidate_name(modname):
-    # TODO: Smarter heuristic: Check for known Django setting name definitions.
     return 'settings' in modname and modname not in _ignored_settings_modules
 
 
@@ -50,8 +50,50 @@ def discover_candidate_settings():
         if 0 < len(modnames):
             yield (sys_path_entry, modnames)
 
+# The presence of any of these settings indicate a likely Django settings module.
+_likely_setting_names = {
+    # XXX: Too common?
+    # 'DEBUG',
 
-def print_candidate_settings():
+    'DATABASES',
+    'EMAIL_BACKEND',
+    'INSTALLED_APPS',
+    'MEDIA_ROOT',
+    'MEDIA_URL',
+    'MIDDLEWARE_CLASSES',
+    'ROOT_URLCONF',
+    'SECRET_KEY',
+    'SITE_ID',
+    'STATIC_ROOT',
+    'STATIC_URL',
+}
+
+
+def find_potential_problems(modname):
+    """
+    Heuristically check if `modname` is a likely settings module.
+
+    Returns a set of short problem descriptions, which will be empty for likely settings modules.
+
+    :rtype: set
+    """
+    def problems():
+        try:
+            mod = importlib.import_module(modname)
+        except Exception as e:
+            yield 'import raised {}'.format(type(e).__name__)
+            return
+
+        names = set(dir(mod))
+        if not any(name.isupper() for name in names):
+            yield 'no uppercase names'
+        elif not _likely_setting_names & names:
+            yield 'no likely setting names'
+
+    return set(problems())
+
+
+def print_candidate_settings(include_problems=False):
     # TODO (Python 3): Use print(..., flush=True) instead
     print('Discovering usable Django settings modules...', end=' ')
     sys.stdout.flush()
@@ -64,7 +106,11 @@ def print_candidate_settings():
             print('    In {}:'.format(sys_path_entry))
             print()
             for modname in modnames:
-                print('        {}'.format(modname))
+                problems = find_potential_problems(modname)
+                if not problems:
+                    print('        {}'.format(modname))
+                elif include_problems:
+                    print('        {} ({})'.format(modname, ', '.join(problems)))
             print()
     else:
         print('None found.')
