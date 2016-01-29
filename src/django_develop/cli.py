@@ -73,17 +73,23 @@ class DjangoDevelop(object):
                 value = getattr(base_mod, name)
                 setattr(dev_settings, name, value)
 
-        # Special-case handling: If the base settings module explicitly sets SECRET_KEY
-        # to an empty value, unset it here so that the default below will its place.
+        # Special-case handling: If any of these core settings are explicitly
+        # set to an empty value in the base settings module, unset them here
+        # so that the defaults below will take their place.
         #
-        # Among other things, this helps guard against settings modules that do
-        # "from django.conf.global_settings import *" (even though they shouldn't).
+        # This prevents configuration errors due to settings modules that do
+        # "from django.conf.global_settings import *"
+        # (even though they shouldn't)
         #
-        # Note: This specifically uses "not dev_settings.SECRET_KEY" rather than comparing
-        # with '' or None, which is the same logic that django/conf/__init__.py uses
-        # to decide whether to raise ImproperlyConfigured for SECRET_KEY.
-        if hasattr(dev_settings, 'SECRET_KEY') and not dev_settings.SECRET_KEY:
-            del dev_settings.SECRET_KEY
+        empty_specials_in_global_settings = [
+            'SECRET_KEY',
+            'DATABASES',
+            'STATIC_ROOT',
+            'MEDIA_ROOT',
+        ]
+        for name in empty_specials_in_global_settings:
+            if hasattr(dev_settings, name) and not getattr(dev_settings, name):
+                delattr(dev_settings, name)
 
         # Add django-development defaults
         defaults = {
