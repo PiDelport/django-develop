@@ -28,7 +28,9 @@ class DjangoDevelop(object):
         return config
 
     def write_config(self, config):
-        with self._config_path.open('w') as f:
+        # XXX: Python 2's ConfigParser seems to need a non-Unicode output file?
+        mode = 'w' if (3,) <= sys.version_info else 'wb'
+        with self._config_path.open(mode) as f:
             config.write(f)
 
     def init_instance(self, base_settings_module):
