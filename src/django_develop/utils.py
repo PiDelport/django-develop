@@ -52,7 +52,10 @@ def find_candidate_settings():
 
 
 def print_candidate_settings():
-    print('Discovering usable Django settings modules...', end=' ', flush=True)
+    # TODO (Python 3): Use print(..., flush=True) instead
+    print('Discovering usable Django settings modules...', end=' ')
+    sys.stdout.flush()
+
     candidate_groups = list(find_candidate_settings())
     if 0 < len(candidate_groups):
         print('Found:')
