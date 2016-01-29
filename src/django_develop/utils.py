@@ -28,15 +28,15 @@ _ignored_settings_modules = {
 }
 
 
-def is_candidate_settings(modname):
+def is_candidate_name(modname):
     # TODO: Smarter heuristic: Check for known Django setting name definitions.
     return 'settings' in modname and modname not in _ignored_settings_modules
 
 
-def find_candidate_settings():
+def discover_candidate_settings():
 
     def report_candidate(modname):
-        if is_candidate_settings(modname):
+        if is_candidate_name(modname):
             print('Warning: import failed for {}'.format(modname))
 
     # XXX: Copy sys.path with list(), to avoid weird effects from mutation while we iterate.
@@ -45,8 +45,8 @@ def find_candidate_settings():
             modname
             for (finder, modname, is_pkg) in pkgutil.walk_packages([sys_path_entry],
                                                                    onerror=report_candidate)
-            if not is_pkg and is_candidate_settings(modname)
-            ]
+            if not is_pkg and is_candidate_name(modname)
+        ]
         if 0 < len(modnames):
             yield (sys_path_entry, modnames)
 
@@ -56,7 +56,7 @@ def print_candidate_settings():
     print('Discovering usable Django settings modules...', end=' ')
     sys.stdout.flush()
 
-    candidate_groups = list(find_candidate_settings())
+    candidate_groups = list(discover_candidate_settings())
     if 0 < len(candidate_groups):
         print('Found:')
         print()
