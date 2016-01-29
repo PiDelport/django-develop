@@ -40,15 +40,15 @@ def find_candidate_settings():
             print('Warning: import failed for {}'.format(name))
 
     # XXX: Copy sys.path with list(), to avoid weird effects from mutation while we iterate.
-    for path_entry in list(sys.path):
+    for sys_path_entry in list(sys.path):
         candidates = [
             name
-            for (loader, name, is_pkg) in pkgutil.walk_packages([path_entry],
+            for (loader, name, is_pkg) in pkgutil.walk_packages([sys_path_entry],
                                                                 onerror=report_candidate)
             if not is_pkg and is_candidate_settings(name)
             ]
         if 0 < len(candidates):
-            yield (path_entry, candidates)
+            yield (sys_path_entry, candidates)
 
 
 def print_candidate_settings():
@@ -57,8 +57,8 @@ def print_candidate_settings():
     if 0 < len(candidate_groups):
         print('Found:')
         print()
-        for (path_entry, candidates) in candidate_groups:
-            print('    In {}:'.format(path_entry))
+        for (sys_path_entry, candidates) in candidate_groups:
+            print('    In {}:'.format(sys_path_entry))
             print()
             for candidate in candidates:
                 print('        {}'.format(candidate))
