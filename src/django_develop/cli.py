@@ -94,7 +94,6 @@ class DjangoDevelop(object):
         # Add django-development defaults
         defaults = {
             # The usual required settings
-            'DEBUG': True,
             'SECRET_KEY': 'development key for {}'.format(self.instance_path),
             'ROOT_URLCONF': 'django_develop.dev_urls',
             'DATABASES': {
@@ -112,6 +111,11 @@ class DjangoDevelop(object):
         for (name, value) in defaults.items():
             if not hasattr(dev_settings, name):
                 setattr(dev_settings, name, value)
+
+        # For now, always enable DEBUG.
+        # This overrides any "DEBUG = False" that the base settings module may have imported.
+        # TODO: Provide a convenient way to toggle this? (Would that really be useful?)
+        dev_settings.DEBUG = True
 
         # Set DJANGO_SETTINGS_MODULE
         if (ENVIRONMENT_VARIABLE in os.environ and
