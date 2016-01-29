@@ -194,7 +194,10 @@ def main_config():
     except ValueError:
         print('Usage: django-develop-config <base_settings_module>')
         print()
+
+        # TODO: Add CLI flag for include_problems?
         utils.print_candidate_settings()
+
         raise SystemExit(2)
     else:
         dd = _get_DjangoDevelop()
