@@ -30,10 +30,20 @@ _ignored_settings_modules = {
 
 
 def is_candidate_name(modname):
+    """
+    Quick check for candidate Django settings module names.
+    """
     return 'settings' in modname and modname not in _ignored_settings_modules
 
 
 def discover_candidate_settings():
+    """
+    Discover candidate settings modules by name.
+
+    This does not import or inspect the contents of the modules.
+
+    :return: List of (sys.path entry, [module names])
+    """
 
     def report_candidate(modname):
         if is_candidate_name(modname):
@@ -94,6 +104,13 @@ def find_potential_problems(modname):
 
 
 def print_candidate_settings(include_problems=False):
+    """
+    Discover and print candidate usable Django settings modules to standard output.
+
+    :param include_problems:
+        If true, include candidate modules with problems.
+        This should mainly be useful for troubleshooting.
+    """
     # TODO (Python 3): Use print(..., flush=True) instead
     print('Discovering usable Django settings modules...', end=' ')
     sys.stdout.flush()
