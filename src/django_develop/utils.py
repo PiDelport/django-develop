@@ -140,3 +140,4 @@ def print_candidate_settings(include_problems=False):
                 print()
     else:
         print('None found.')
+        print()
