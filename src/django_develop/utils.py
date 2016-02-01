@@ -4,6 +4,8 @@ import sys
 import pkgutil
 import importlib
 
+from django.core.management.color import color_style
+
 
 def is_inside_virtual_env():
     """
@@ -111,6 +113,8 @@ def print_candidate_settings(include_problems=False):
         If true, include candidate modules with problems.
         This should mainly be useful for troubleshooting.
     """
+    style = color_style()
+
     # TODO (Python 3): Use print(..., flush=True) instead
     print('Looking for usable Django settings modules in Python path...', end=' ')
     sys.stdout.flush()
@@ -130,7 +134,7 @@ def print_candidate_settings(include_problems=False):
                 for modname in modnames:
                     problems = find_potential_problems(modname)
                     if not problems:
-                        print('        {}'.format(modname))
+                        print('        {}'.format(style.SUCCESS(modname)))
                     elif include_problems:
                         print('        {} ({})'.format(modname, ', '.join(problems)))
                 print()
