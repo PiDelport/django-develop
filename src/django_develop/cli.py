@@ -7,7 +7,7 @@ from pathlib import Path
 
 from attr import attributes, attr
 from django.conf import settings, ENVIRONMENT_VARIABLE
-from django.core.management import ManagementUtility
+from django.core.management import ManagementUtility, color_style
 
 from django_develop.compat import RawConfigParser
 from django_develop import utils
@@ -188,13 +188,27 @@ def main_config():
     """
     django-develop-config CLI entry point.
     """
+    style = color_style()
+
     if not utils.is_inside_virtual_env():
         _fail('Run django-develop-config inside a virtualenv')
 
+    dd = _get_DjangoDevelop()  # type: DjangoDevelop
     try:
         [base_settings_module] = sys.argv[1:2]
     except ValueError:
         print('Usage: django-develop-config <base_settings_module>')
+        print()
+
+        # Show current configuration
+        if dd.instance_path.exists():
+            print('Instance directory: {}'.format(dd.instance_path))
+            print()
+        config = dd.read_config()
+        base_settings_module = config.get('django-develop', 'base_settings_module', fallback=None)
+        print('Current base settings module: {}'.format(
+            style.SUCCESS(base_settings_module) if base_settings_module else
+            'not configured'))
         print()
 
         # TODO: Add CLI flag for include_problems?
@@ -202,5 +216,4 @@ def main_config():
 
         raise SystemExit(2)
     else:
-        dd = _get_DjangoDevelop()
         dd.init_instance(base_settings_module)
