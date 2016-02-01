@@ -22,7 +22,8 @@ setup(
     use_scm_version=True,
 
     install_requires=[
-        'attrs',
+        # attrs 15.2.0 (2015-12-08) adds the convert feature.
+        'attrs >=15.2.0',
         'Django',
     ] + list(_python2_compat()),
 
