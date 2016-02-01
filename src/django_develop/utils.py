@@ -112,7 +112,7 @@ def print_candidate_settings(include_problems=False):
         This should mainly be useful for troubleshooting.
     """
     # TODO (Python 3): Use print(..., flush=True) instead
-    print('Discovering usable Django settings modules...', end=' ')
+    print('Looking for usable Django settings modules in Python path...', end=' ')
     sys.stdout.flush()
 
     candidate_groups = list(discover_candidate_settings())
