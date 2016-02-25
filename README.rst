@@ -11,7 +11,7 @@ Django development for humans.
     :target: https://github.com/pjdelport/django-develop
 
 .. image:: https://img.shields.io/github/issues/pjdelport/django-develop.svg
-    :target: https://github.com/pjdelport/django-develop/issues
+    :target: https://github.com/pjdelport/django-develop/issues?q=is:open
 
 .. image:: https://travis-ci.org/pjdelport/django-develop.svg?branch=master
     :target: https://travis-ci.org/pjdelport/django-develop
