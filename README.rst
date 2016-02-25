@@ -2,6 +2,8 @@
 django-develop
 ==============
 
+Django development for humans.
+
 .. image:: https://img.shields.io/pypi/v/django-develop.svg
     :target: https://pypi.python.org/pypi/django-develop
 
@@ -16,3 +18,26 @@ django-develop
 
 .. image:: https://codecov.io/github/pjdelport/django-develop/coverage.svg?branch=master
     :target: https://codecov.io/github/pjdelport/django-develop?branch=master
+
+
+Installation
+============
+
+.. code:: shell
+
+    pip install django-develop
+
+Supported and tested on:
+
+* Python: 2.7, 3.4, 3.5, PyPy
+* Django: 1.8, 1.9
+
+
+Usage
+=====
+
+.. code:: shell
+
+    $ django-develop-config
+    ...
+    $ django-develop <subcommand>
