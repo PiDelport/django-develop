@@ -3,7 +3,3 @@
 branch = True
 
 source = src
-
-omit =
-    # This file is mostly a compatibility copy of Django code.
-    src/django_develop/compat.py
