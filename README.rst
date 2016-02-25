@@ -2,6 +2,9 @@
 django-develop
 ==============
 
+.. image:: https://img.shields.io/pypi/v/django-develop.svg
+    :target: https://pypi.python.org/pypi/django-develop
+
 .. image:: https://travis-ci.org/pjdelport/django-develop.svg?branch=master
     :target: https://travis-ci.org/pjdelport/django-develop
 
