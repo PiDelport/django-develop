@@ -20,24 +20,32 @@ Django development for humans.
     :target: https://codecov.io/github/pjdelport/django-develop?branch=master
 
 
-Installation
-============
+Quick Start
+===========
 
-.. code:: shell
+1. Create a virtual environment with your Django project installed::
 
-    pip install django-develop
+    $ mkvirtualenv my-app
+    $ pip install -e .
 
-Supported and tested on:
+2. Install ``django-develop``::
 
-* Python: 2.7, 3.4, 3.5, PyPy
-* Django: 1.8, 1.9
+    $ pip install django-develop
 
-
-Usage
-=====
-
-.. code:: shell
+2. Select your project's base settings module::
 
     $ django-develop-config
-    ...
-    $ django-develop <subcommand>
+    …
+    $ django-develop-config my_app.base_settings
+
+3. Use ``django-develop`` as you would normally use ``django-admin``::
+
+    $ django-develop check
+    $ django-develop migrate
+    $ django-develop runserver
+
+
+Contributing
+============
+
+See `<HACKING.rst>`__.
