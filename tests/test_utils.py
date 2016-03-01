@@ -1,3 +1,4 @@
+import os.path
 import string
 
 from hypothesis import given, example, note, assume
@@ -92,3 +93,42 @@ class TestIsCandidateName(unittest.TestCase):
             modname = pre + special + post
             note('modname={!r}'.format(modname))
             self.assertTrue(utils.is_candidate_name(modname))
+
+
+class TestDiscoverCandidateSettings(unittest.TestCase):
+    """
+    `utils.discover_candidate_settings()`
+    """
+
+    def test_dummy_path(self):
+        """
+        Discover no candidates from an empty / dummy `sys.path`.
+        """
+        paths = [
+            [],
+            ['dummy'],
+            ['foo', 'bar'],
+        ]
+        for path in paths:
+            with self.subTest(path=path):
+                with mock.patch('sys.path', path):
+                    self.assertEqual(
+                        list(utils.discover_candidate_settings()),
+                        [])
+
+    def test_examples(self):
+        """
+        Discover the example settings modules.
+        """
+        # Limit the search to the test root to avoid having to mask out third-party modules,
+        # such as hypothesis._settings.
+        test_root = os.path.dirname(__file__)
+        with mock.patch('sys.path', [test_root]):
+            self.assertEqual(
+                list(utils.discover_candidate_settings()),
+                [(test_root, [
+                    'test_examples.error_settings',
+                    'test_examples.likely_settings',
+                    'test_examples.no_likely_settings',
+                    'test_examples.no_settings',
+                ])])
