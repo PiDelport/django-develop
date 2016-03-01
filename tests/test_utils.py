@@ -9,6 +9,9 @@ from py2_compat import unittest, mock
 from django_develop import utils
 
 
+TEST_ROOT = os.path.dirname(__file__)
+
+
 class TestVirtualEnvDetection(unittest.TestCase):
 
     def test_is_inside_virtual_env(self):
@@ -122,11 +125,10 @@ class TestDiscoverCandidateSettings(unittest.TestCase):
         """
         # Limit the search to the test root to avoid having to mask out third-party modules,
         # such as hypothesis._settings.
-        test_root = os.path.dirname(__file__)
-        with mock.patch('sys.path', [test_root]):
+        with mock.patch('sys.path', [TEST_ROOT]):
             self.assertEqual(
                 list(utils.discover_candidate_settings()),
-                [(test_root, [
+                [(TEST_ROOT, [
                     'test_examples.error_settings',
                     'test_examples.likely_settings',
                     'test_examples.no_likely_settings',
