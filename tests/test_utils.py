@@ -132,3 +132,72 @@ class TestDiscoverCandidateSettings(unittest.TestCase):
                     'test_examples.no_likely_settings',
                     'test_examples.no_settings',
                 ])])
+
+
+class TestFindPotentialProblems(unittest.TestCase):
+    """
+    `utils.find_potential_problems()`
+    """
+
+    def test_import_failures(self):
+        """
+        Flag import failures.
+        """
+        cases = {
+            '': {'import raised ValueError'},
+            '.': {'import raised TypeError'},
+            '..': {'import raised TypeError'},
+            '.foo': {'import raised TypeError'},
+            ' ': {'import raised ImportError'},
+            'nonexistent': {'import raised ImportError'},
+            'not.existent': {'import raised ImportError'},
+            'test_examples.error_settings': {'import raised NameError'},
+        }
+        for (modname, problems) in cases.items():
+            with self.subTest(modname=modname):
+                self.assertEqual(utils.find_potential_problems(modname), problems)
+
+    def test_problems(self):
+        """
+        Flag importable modules with with problems.
+        """
+        cases = {
+            'test_examples.no_settings': {'no uppercase names'},
+            'test_examples.no_likely_settings': {'no likely setting names'},
+        }
+        for (modname, problems) in cases.items():
+            with self.subTest(modname=modname):
+                self.assertEqual(utils.find_potential_problems(modname), problems)
+
+    def test_likely_settings(self):
+        """
+        Pass modules with likely setting names.
+        """
+        self.assertEqual(
+            utils.find_potential_problems('test_examples.likely_settings'),
+            set())
+
+    def test_individual_likely_settings(self):
+        """
+        The presence of any one of these settings makes a module count as likely.
+        """
+        likely_names = [
+            'DATABASES',
+            'EMAIL_BACKEND',
+            'INSTALLED_APPS',
+            'MEDIA_ROOT',
+            'MEDIA_URL',
+            'MIDDLEWARE_CLASSES',
+            'ROOT_URLCONF',
+            'SECRET_KEY',
+            'SITE_ID',
+            'STATIC_ROOT',
+            'STATIC_URL',
+        ]
+        for name in likely_names:
+            with self.subTest(name=name):
+                with mock.patch.multiple('test_examples.no_likely_settings', create=True,
+                                         **{name: 'dummy'}):
+                        self.assertEqual(
+                            utils.find_potential_problems('test_examples.no_likely_settings'),
+                            set())
