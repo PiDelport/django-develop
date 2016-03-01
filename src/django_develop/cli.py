@@ -7,7 +7,7 @@ from pathlib import Path
 
 from attr import attributes, attr
 from django.conf import settings, ENVIRONMENT_VARIABLE
-from django.core.management import ManagementUtility, color_style
+from django.core.management import ManagementUtility
 
 from configparser import RawConfigParser
 
@@ -187,8 +187,6 @@ def main_config():
     """
     django-develop-config CLI entry point.
     """
-    style = color_style()
-
     if not utils.is_inside_virtual_env():
         _fail('Run django-develop-config inside a virtualenv')
 
@@ -206,7 +204,7 @@ def main_config():
         config = dd.read_config()
         base_settings_module = config.get('django-develop', 'base_settings_module', fallback=None)
         print('Current base settings module: {}'.format(
-            style.SUCCESS(base_settings_module) if base_settings_module else
+            utils.SUCCESS(base_settings_module) if base_settings_module else
             'not configured'))
         print()
 

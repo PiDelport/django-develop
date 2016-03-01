@@ -8,6 +8,14 @@ import django
 from django.core.management.color import color_style
 
 
+def SUCCESS(s):
+    style = color_style()
+    # Django 1.8 does not have the SUCCESS style; use MIGRATE_SUCCESS instead.
+    _SUCCESS = (style.MIGRATE_SUCCESS if django.VERSION < (1, 9) else
+                style.SUCCESS)
+    return _SUCCESS(s)
+
+
 def is_inside_virtual_env():
     """
     Detect whether a Python virtual environment is active.
@@ -114,11 +122,6 @@ def print_candidate_settings(include_problems=False):
         If true, include candidate modules with problems.
         This should mainly be useful for troubleshooting.
     """
-    style = color_style()
-    # Django 1.8 does not have the SUCCESS style; use MIGRATE_SUCCESS instead.
-    SUCCESS = (style.MIGRATE_SUCCESS if django.VERSION < (1, 9) else
-               style.SUCCESS)
-
     # TODO (Python 3): Use print(..., flush=True) instead
     print('Looking for usable Django settings modules in Python path...', end=' ')
     sys.stdout.flush()
