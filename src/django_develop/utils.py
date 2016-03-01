@@ -4,6 +4,7 @@ import sys
 import pkgutil
 import importlib
 
+import django
 from django.core.management.color import color_style
 
 
@@ -114,6 +115,9 @@ def print_candidate_settings(include_problems=False):
         This should mainly be useful for troubleshooting.
     """
     style = color_style()
+    # Django 1.8 does not have the SUCCESS style; use MIGRATE_SUCCESS instead.
+    SUCCESS = (style.MIGRATE_SUCCESS if django.VERSION < (1, 9) else
+               style.SUCCESS)
 
     # TODO (Python 3): Use print(..., flush=True) instead
     print('Looking for usable Django settings modules in Python path...', end=' ')
@@ -134,7 +138,7 @@ def print_candidate_settings(include_problems=False):
                 for modname in modnames:
                     problems = find_potential_problems(modname)
                     if not problems:
-                        print('        {}'.format(style.SUCCESS(modname)))
+                        print('        {}'.format(SUCCESS(modname)))
                     elif include_problems:
                         print('        {} ({})'.format(modname, ', '.join(problems)))
                 print()
