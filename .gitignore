@@ -12,6 +12,9 @@ dist/
 # Tox working directory
 .tox
 
+# Hypothesis examples
+.hypothesis/
+
 # pytest cache directory
 .cache/
 
