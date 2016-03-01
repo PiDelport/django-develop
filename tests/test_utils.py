@@ -1,5 +1,8 @@
+import io
 import os.path
 import string
+import sys
+from textwrap import dedent
 
 from hypothesis import given, example, note, assume
 from hypothesis.strategies import text
@@ -203,3 +206,63 @@ class TestFindPotentialProblems(unittest.TestCase):
                         self.assertEqual(
                             utils.find_potential_problems('test_examples.no_likely_settings'),
                             set())
+
+
+class TestPrintCandidateSettings(unittest.TestCase):
+    """
+    `utils.print_candidate_settings()`
+    """
+
+    def _patch_stdout(self):
+        # Python 2 compatibility: Intercept sys.stdout with BytesIO instead of StringIO.
+        return mock.patch('sys.stdout', new_callable=(
+            io.BytesIO if sys.version_info < (3,) else io.StringIO))
+
+    def test_no_candidates(self):
+        """
+        Printing out no candidates.
+        """
+        with mock.patch('sys.path', []):
+            with self._patch_stdout() as stdout:
+                utils.print_candidate_settings()
+
+        self.assertEqual(stdout.getvalue(), dedent("""\
+            Looking for usable Django settings modules in Python path... None found.
+
+            """))
+
+    def test_likely_candidates(self):
+        """
+        Printing a likely candidate.
+        """
+        with self._patch_stdout() as stdout:
+            utils.print_candidate_settings()
+
+        self.assertEqual(stdout.getvalue(), dedent("""\
+            Looking for usable Django settings modules in Python path... Found:
+
+                In {}:
+
+                    test_examples.likely_settings
+
+            """.format(TEST_ROOT)))
+
+    def test_all_candidates(self):
+        """
+        Printing and reporting problematic candidates too.
+        """
+        with mock.patch('sys.path', [TEST_ROOT]):
+            with self._patch_stdout() as stdout:
+                utils.print_candidate_settings(include_problems=True)
+
+        self.assertEqual(stdout.getvalue(), dedent("""\
+            Looking for usable Django settings modules in Python path... Found:
+
+                In {}:
+
+                    test_examples.error_settings (import raised NameError)
+                    test_examples.likely_settings
+                    test_examples.no_likely_settings (no likely setting names)
+                    test_examples.no_settings (no uppercase names)
+
+            """.format(TEST_ROOT)))
