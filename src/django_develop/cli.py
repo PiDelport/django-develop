@@ -9,7 +9,8 @@ from attr import attributes, attr
 from django.conf import settings, ENVIRONMENT_VARIABLE
 from django.core.management import ManagementUtility, color_style
 
-from django_develop.compat import RawConfigParser
+from configparser import RawConfigParser
+
 from django_develop import utils
 
 

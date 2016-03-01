@@ -9,6 +9,7 @@ with open('README.rst') as f:
 def _python2_compat():
     import sys
     if sys.version_info < (3,):
+        yield 'configparser'
         yield 'pathlib'
 
 
