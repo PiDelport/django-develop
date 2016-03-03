@@ -25,7 +25,7 @@ Coverage
 
 With ``coverage``::
 
-    coverage run --source src -m unittest discover tests
+    coverage run -m unittest discover tests
     coverage report
     coverage html
 

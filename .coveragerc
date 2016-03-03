@@ -2,4 +2,6 @@
 [run]
 branch = True
 
-source = src
+source =
+    src
+    tests
