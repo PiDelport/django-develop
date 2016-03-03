@@ -1,18 +1,12 @@
 # coding: utf-8
+import sys
 from setuptools import setup, find_packages
 
-
-with open('README.rst') as f:
-    readme = f.read()
-
-
-# FIXME
-def _python2_compat():
-    import sys
-    if sys.version_info < (3,):
-        yield 'configparser'
-        yield 'pathlib'
-
+# Backward-compatibility dependencies for Python 2
+_python2_requires = [
+    'configparser',
+    'pathlib',
+] if sys.version_info < (3,) else []
 
 setup(
     name='django-develop',
@@ -32,7 +26,7 @@ setup(
         # attrs 15.2.0 (2015-12-08) adds the convert feature.
         'attrs >=15.2.0',
         'Django',
-    ] + list(_python2_compat()),
+    ] + _python2_requires,
 
     # The django-develop command-line script
     entry_points={
