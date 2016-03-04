@@ -19,7 +19,6 @@ With ``unittest``::
     python -m unittest discover tests
 
 
-
 Coverage
 ========
 
@@ -29,9 +28,8 @@ With ``coverage``::
     coverage report
     coverage html
 
-
 With ``pytest`` and ``pytest-cov``::
 
-    py.test --cov src
-    py.test --cov src --cov-report=html
+    py.test --cov
+    py.test --cov --cov-report=html
 
