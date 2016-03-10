@@ -13,11 +13,11 @@ setup(
     description='Django development for humans',
     url='https://github.com/pjdelport/django-develop',
 
-    package_dir={'': 'src'},
-    packages=find_packages('src'),
-
     author=u'Piët Delport',
     author_email='pjdelport@gmail.com',
+
+    package_dir={'': 'src'},
+    packages=find_packages('src'),
 
     setup_requires=['setuptools_scm'],
     use_scm_version=True,
