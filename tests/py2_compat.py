@@ -9,3 +9,8 @@ if sys.version_info < (3, 3):
 else:
     import unittest
     from unittest import mock
+
+if sys.version_info < (3, 4):
+    from backports.tempfile import TemporaryDirectory
+else:
+    from tempfile import TemporaryDirectory
