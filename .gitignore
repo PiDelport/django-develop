@@ -12,5 +12,12 @@ dist/
 # Tox working directory
 .tox
 
+# Hypothesis examples
+.hypothesis/
+
 # pytest cache directory
 .cache/
+
+# Coverage
+.coverage
+htmlcov
