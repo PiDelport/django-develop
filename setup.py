@@ -2,6 +2,12 @@
 import sys
 from setuptools import setup, find_packages
 
+
+def README():
+    with open('README.rst') as f:
+        return f.read()
+
+
 # Backward-compatibility dependencies for Python 2
 _python2_requires = [
     'configparser',
@@ -11,6 +17,7 @@ _python2_requires = [
 setup(
     name='django-develop',
     description='Django development for humans',
+    long_description=README(),
     url='https://github.com/pjdelport/django-develop',
 
     author='Pi Delport',
