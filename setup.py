@@ -13,7 +13,7 @@ setup(
     description='Django development for humans',
     url='https://github.com/pjdelport/django-develop',
 
-    author=u'Piët Delport',
+    author='Pi Delport',
     author_email='pjdelport@gmail.com',
 
     package_dir={'': 'src'},
