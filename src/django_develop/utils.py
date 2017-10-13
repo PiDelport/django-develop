@@ -71,6 +71,7 @@ def discover_candidate_settings():
         if 0 < len(modnames):
             yield (sys_path_entry, modnames)
 
+
 # The presence of any of these settings indicate a likely Django settings module.
 _likely_setting_names = {
     # XXX: Too common?
