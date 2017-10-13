@@ -148,14 +148,18 @@ class TestFindPotentialProblems(unittest.TestCase):
         """
         Flag import failures.
         """
+        # Python 3.6 introduced ModuleNotFoundError.
+        # https://docs.python.org/3/whatsnew/3.6.html#other-language-changes
+        _ModuleNotFoundError = 'ImportError' if sys.version_info < (3, 6) else 'ModuleNotFoundError'
+
         cases = {
             '': {'import raised ValueError'},
             '.': {'import raised TypeError'},
             '..': {'import raised TypeError'},
             '.foo': {'import raised TypeError'},
-            ' ': {'import raised ImportError'},
-            'nonexistent': {'import raised ImportError'},
-            'not.existent': {'import raised ImportError'},
+            ' ': {'import raised {}'.format(_ModuleNotFoundError)},
+            'nonexistent': {'import raised {}'.format(_ModuleNotFoundError)},
+            'not.existent': {'import raised {}'.format(_ModuleNotFoundError)},
             'test_examples.error_settings': {'import raised NameError'},
         }
         for (modname, problems) in cases.items():
